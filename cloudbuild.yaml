@@ -1,0 +1,9 @@
+steps:
+  # Build an image
+  - id: "docker-build"
+    name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "${_IMAGE_NAME}", "."]
+
+# Push the image to artifact registry
+images:
+  - "${_IMAGE_NAME}"

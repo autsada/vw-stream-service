@@ -8,7 +8,7 @@ import child_process from "child_process"
 import { WebSocketServer } from "ws"
 import { URL } from "url"
 
-const { PORT, SMART_TRANSCODE } = process.env
+const { PORT, SMART_TRANSCODE, STREAMING_SERVICE_BASE_URL } = process.env
 const port = Number(PORT || 8080)
 const transcode = SMART_TRANSCODE || true
 
@@ -33,8 +33,10 @@ wss.on("connection", (ws, req) => {
   ws.send("WELL HELLO THERE FRIEND")
 
   if (!req.url) return
+  console.log("req url -->", req.url)
 
-  const queryString = new URL(`ws://localhost:8080${req.url}`).search
+  const queryString = new URL(`ws://${STREAMING_SERVICE_BASE_URL}${req.url}`)
+    .search
   const params = new URLSearchParams(queryString)
   const baseUrl = "rtmps://live.cloudflare.com:443/live"
   const key = params.get("key")
@@ -42,7 +44,6 @@ wss.on("connection", (ws, req) => {
   const audio = params.get("audio")
 
   const rtmpUrl = `${baseUrl}/${key}`
-  console.log("rtmp url -->", rtmpUrl)
 
   const videoCodec =
     video === "h264" && !transcode
