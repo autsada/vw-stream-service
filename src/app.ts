@@ -35,8 +35,8 @@ wss.on("connection", (ws, req) => {
   if (!req.url) return
   console.log("req url -->", req.url)
 
-  const queryString = new URL(`ws://${STREAMING_SERVICE_BASE_URL}${req.url}`)
-    .search
+  const BASE_URL = STREAMING_SERVICE_BASE_URL || "localhost:8080"
+  const queryString = new URL(`ws://${BASE_URL}${req.url}`).search
   const params = new URLSearchParams(queryString)
   const baseUrl = "rtmps://live.cloudflare.com:443/live"
   const key = params.get("key")
